@@ -27,7 +27,9 @@ public abstract class LoaderTask extends AsyncTask<Void, String, List<Object3DDa
 	/**
 	 * The dialog that will show the progress of the loading
 	 */
-	private final ProgressDialog dialog;
+	private ProgressDialog dialog;
+
+	private boolean showProgressDialog;
 
 	/**
 	 * Build a new progress dialog for loading the data model asynchronously
@@ -36,17 +38,20 @@ public abstract class LoaderTask extends AsyncTask<Void, String, List<Object3DDa
 	 */
 	public LoaderTask(Activity parent, URI uri, LoadListener callback) {
 		this.uri = uri;
-		this.dialog = new ProgressDialog(parent);
-		this.callback = callback; }
+		if(showProgressDialog) this.dialog = new ProgressDialog(parent);
+		this.callback = callback;
+	}
 
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		this.dialog.setMessage("Loading...");
-		this.dialog.setCancelable(false);
-		//this.dialog.getWindow().setGravity(Gravity.BOTTOM);
-		this.dialog.show();
+		if(dialog!=null) {
+            this.dialog.setMessage("Loading...");
+            this.dialog.setCancelable(false);
+            //this.dialog.getWindow().setGravity(Gravity.BOTTOM);
+            this.dialog.show();
+        }
 	}
 
 
@@ -73,13 +78,15 @@ public abstract class LoaderTask extends AsyncTask<Void, String, List<Object3DDa
 	@Override
 	protected void onProgressUpdate(String... values) {
 		super.onProgressUpdate(values);
-		this.dialog.setMessage(values[0]);
+        if(dialog!=null) {
+            this.dialog.setMessage(values[0]);
+        }
 	}
 
 	@Override
 	protected void onPostExecute(List<Object3DData> data) {
 		super.onPostExecute(data);
-		if (dialog.isShowing()) {
+		if (dialog!=null && dialog.isShowing()) {
 			dialog.dismiss();
 		}
 	}
@@ -104,4 +111,12 @@ public abstract class LoaderTask extends AsyncTask<Void, String, List<Object3DDa
 	public void onLoadComplete() {
 		callback.onLoadComplete();
 	}
+
+    public boolean isShowProgressDialog() {
+        return showProgressDialog;
+    }
+
+    public void setShowProgressDialog(boolean showProgressDialog) {
+        this.showProgressDialog = showProgressDialog;
+    }
 }
