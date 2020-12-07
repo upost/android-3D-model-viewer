@@ -66,6 +66,7 @@ public class ModelSurfaceView extends GLSurfaceView implements EventListener {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+	    if(touchController==null) return false;
 		try {
 			return touchController.onTouchEvent(event);
 		} catch (Exception ex) {
