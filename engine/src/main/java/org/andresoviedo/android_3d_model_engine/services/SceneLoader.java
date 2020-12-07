@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.andresoviedo.android_3d_model_engine.BuildConfig;
 import org.andresoviedo.android_3d_model_engine.animation.Animator;
 import org.andresoviedo.android_3d_model_engine.collision.CollisionEvent;
 import org.andresoviedo.android_3d_model_engine.controller.TouchEvent;
@@ -237,7 +238,8 @@ public class SceneLoader implements LoadListener, EventListener {
     }
 
     private final void makeToastText(final String text, final int toastDuration) {
-        parent.runOnUiThread(() -> Toast.makeText(parent.getApplicationContext(), text, toastDuration).show());
+        if(BuildConfig.DEBUG)
+            parent.runOnUiThread(() -> Toast.makeText(parent.getApplicationContext(), text, toastDuration).show());
     }
 
     public final Object3DData getLightBulb() {
